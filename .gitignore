@@ -7,5 +7,6 @@ env/
 documentation/
 *.db
 
+TODO
 dist/*
 *.egg-info
