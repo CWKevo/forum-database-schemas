@@ -6,7 +6,7 @@ sys.path.append('.')
 import setuptools
 
 
-__description__ = "Python Project Template" # FIXME
+__description__ = "Wrapping popular forum and discussion software database schemas in a Python ORM, for use in migration scripts."
 __author__      = "SKevo"
 __copyright__   = "Copyright (c) 2021, SKevo"
 __credits__     = ["SKevo"]
@@ -31,7 +31,7 @@ __doc__ = __readme__
 
 
 setuptools.setup(
-    name = 'python_project_template', # FIXME
+    name = 'forum_database_schemas',
     packages = setuptools.find_packages(exclude=('tests',)),
 
     long_description=__readme__,
@@ -40,14 +40,14 @@ setuptools.setup(
     version = __version__,
     license = __license__,
     description = __description__,
-    keywords = [], # FIXME
+    keywords = ['forum', 'discussion', 'database', 'schemas', 'migrations', 'orm'],
 
     author = __author__,
     author_email = __email__,
 
-    url = 'https://github.com/CWKevo/python-project-template', # FIXME
+    url = 'https://github.com/CWKevo/forum_database_schemas',
 
-    install_requires=[], # FIXME
+    install_requires=["bcrypt", "sqlmodel"],
 
     classifiers=[
         f'Development Status :: {__status__}',
