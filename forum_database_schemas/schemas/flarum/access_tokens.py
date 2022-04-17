@@ -1,6 +1,7 @@
 import typing as t
 import sqlmodel as sql
 
+from sqlalchemy import Column, Integer, ForeignKey
 from datetime import datetime
 
 if t.TYPE_CHECKING:
@@ -21,7 +22,7 @@ class FlarumAccessToken(sql.SQLModel, table=True):
     """Access token."""
     user: t.Optional['FlarumUser'] = sql.Relationship(back_populates='access_tokens')
     """User associated with the access token."""
-    user_id: int = sql.Field(index=True, foreign_key='users.id')
+    user_id: int = sql.Field(index=True, sa_column=Column(Integer, ForeignKey('users.id', ondelete='CASCADE')))
     """ID of the user associated with the access token."""
 
     last_activity_at: datetime

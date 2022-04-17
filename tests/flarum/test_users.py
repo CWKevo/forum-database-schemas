@@ -53,7 +53,7 @@ def test_user_create_and_delete(delete: bool=True):
             session.refresh(discussion)
 
             print(discussion.id, discussion.title)
-            print(f'First post: "{discussion.posts[0].content}" [...]')
+            print(f'First post: "{discussion.posts[0].content}"')
 
 
         if delete:

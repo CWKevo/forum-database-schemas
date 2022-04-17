@@ -12,7 +12,7 @@ if t.TYPE_CHECKING:
 
 class FlarumDiscussion(sql.SQLModel, table=True):
     """
-        Model for Flarum discussion
+        Model for Flarum discussion.
     """
 
     __tablename__ = 'discussions'

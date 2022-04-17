@@ -6,6 +6,7 @@ from datetime import datetime, date
 if t.TYPE_CHECKING:
     from .access_tokens import FlarumAccessToken
     from .achievements import FlarumAchievement
+    from .api_keys import FlarumApiKey
     from .discussions import FlarumDiscussion
     from .posts import FlarumPost
 
@@ -129,13 +130,15 @@ class FlarumUser(sql.SQLModel, table=True):
     """List of access tokens for the user."""
     achievements: t.List['FlarumAchievement'] = sql.Relationship(back_populates="users", link_model=FlarumAchievementUser)
     """List of achievements the user has."""
-    discussions: t.List['FlarumDiscussion'] = sql.Relationship(sa_relationship_kwargs={"primaryjoin": "FlarumUser.id==FlarumDiscussion.user_id", "lazy": "joined"})
-    """List of discussions the user has created."""
-    last_posted_in_discussions: t.List['FlarumDiscussion'] = sql.Relationship(sa_relationship_kwargs={"primaryjoin": "FlarumUser.id==FlarumDiscussion.last_posted_user_id", "lazy": "joined"})
-    """List of discussions in which the user created last post."""
-    hid_discussions: t.List['FlarumDiscussion'] = sql.Relationship(sa_relationship_kwargs={"primaryjoin": "FlarumUser.id==FlarumDiscussion.hidden_user_id", "lazy": "joined"})
-    """List of discussions that the user hid."""
+    api_keys: t.List['FlarumApiKey'] = sql.Relationship(back_populates='user')
+    """List of API keys belonging to the user."""
     best_answer_discussions: t.List['FlarumDiscussion'] = sql.Relationship(sa_relationship_kwargs={"primaryjoin": "FlarumUser.id==FlarumDiscussion.best_answer_user_id", "lazy": "joined"})
     """List of discussions in which the user has posted the best answer."""
+    discussions: t.List['FlarumDiscussion'] = sql.Relationship(sa_relationship_kwargs={"primaryjoin": "FlarumUser.id==FlarumDiscussion.user_id", "lazy": "joined"})
+    """List of discussions the user has created."""
+    hid_discussions: t.List['FlarumDiscussion'] = sql.Relationship(sa_relationship_kwargs={"primaryjoin": "FlarumUser.id==FlarumDiscussion.hidden_user_id", "lazy": "joined"})
+    """List of discussions that the user hid."""
+    last_posted_in_discussions: t.List['FlarumDiscussion'] = sql.Relationship(sa_relationship_kwargs={"primaryjoin": "FlarumUser.id==FlarumDiscussion.last_posted_user_id", "lazy": "joined"})
+    """List of discussions in which the user created last post."""
     posts: t.List['FlarumPost'] = sql.Relationship(sa_relationship_kwargs={"primaryjoin": "FlarumPost.user_id==FlarumUser.id", "lazy": "joined"})
     """List of all posts the user made."""

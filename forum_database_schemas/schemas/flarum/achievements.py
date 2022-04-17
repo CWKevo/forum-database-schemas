@@ -60,3 +60,4 @@ class FlarumAchievement(sql.SQLModel, table=True):
     """Whether the achievement is hidden from all achievements list."""
 
     users: t.List["FlarumUser"] = sql.Relationship(back_populates="achievements", link_model=FlarumAchievementUser)
+    """The users that have received this achievement."""
