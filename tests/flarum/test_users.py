@@ -73,9 +73,24 @@ def test_user_create_and_delete(delete: bool=True):
 
 
         if delete:
+            for badge in user.badges:
+                session.delete(badge)
+
+            for ip_ban in user.given_ip_bans:
+                session.delete(ip_ban)
+
             session.delete(user)
 
             for discussion in discussions:
+                for tag in discussion.tags:
+                    for child_tag in tag.children:
+                        session.delete(child_tag)
+
+                    session.delete(tag)
+
+                for post in discussion.posts:
+                    session.delete(post)
+
                 session.delete(discussion)
 
             session.commit()
