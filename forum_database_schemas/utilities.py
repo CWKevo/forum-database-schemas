@@ -23,11 +23,9 @@ def add_column(engine: Engine, table_name: str, column: Column):
 
 
 
-def flarum_hash_password(string: str) -> str:
+def bcrypt_hash(string: str) -> str:
     """
-        Hashes a string with bcrypt for Flarum.
-        
-        See [this](https://github.com/illuminate/hashing/blob/master/BcryptHasher.php) for PHP implementation that Flarum uses.
+        Hashes a string with [bcrypt](https://pypi.org/project/bcrypt).
     """
 
     return bcrypt.hashpw(string.encode('utf-8'), bcrypt.gensalt(rounds=10)).decode('utf-8')

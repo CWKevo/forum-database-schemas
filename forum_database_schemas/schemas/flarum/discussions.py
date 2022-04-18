@@ -7,7 +7,10 @@ from datetime import datetime
 if t.TYPE_CHECKING:
     from .blog_meta import FlarumBlogMeta
     from .posts import FlarumPost
+    from .tags import FlarumTag
     from .users import FlarumUser
+
+from .discussion_tag import FlarumDiscussionTag
 
 
 
@@ -136,3 +139,5 @@ class FlarumDiscussion(sql.SQLModel, table=True):
     """List of blog metas of this discussion."""
     posts: t.List['FlarumPost'] = sql.Relationship(sa_relationship_kwargs={"primaryjoin": "FlarumPost.discussion_id==FlarumDiscussion.id", "lazy": "joined"})
     """List of all posts in the discussion."""
+    tags: t.List['FlarumTag'] = sql.Relationship(back_populates='discussions', link_model=FlarumDiscussionTag)
+    """List of tags the discussion is tagged with."""

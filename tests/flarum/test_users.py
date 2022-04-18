@@ -1,11 +1,12 @@
 from tests.flarum import FLARUM_ENGINE
 from sqlmodel import select, Session
 
-from forum_database_schemas.utilities import flarum_hash_password
+from forum_database_schemas.utilities import bcrypt_hash
 from forum_database_schemas.schemas.flarum.badges import FlarumBadge
 from forum_database_schemas.schemas.flarum.banned_ips import FlarumBannedIp
 from forum_database_schemas.schemas.flarum.discussions import FlarumDiscussion
 from forum_database_schemas.schemas.flarum.posts import FlarumPost
+from forum_database_schemas.schemas.flarum.tags import FlarumTag
 from forum_database_schemas.schemas.flarum.users import FlarumUser
 
 
@@ -33,11 +34,15 @@ def test_user_create_and_delete(delete: bool=True):
 
     with Session(FLARUM_ENGINE) as session:
         discussions = [
-            FlarumDiscussion(title='Test Discussion 1', slug='test-discussion-1'),
+            FlarumDiscussion(title='Test Discussion 1', slug='test-discussion-1', tags=[
+                FlarumTag(name='amazing test tag', slug='test-tag', children=[
+                    FlarumTag(name='children test tag', slug='test-tag-children')
+                ])
+            ]),
             FlarumDiscussion(title='Test Discussion 2', slug='test-discussion-2'),
         ]
 
-        user = FlarumUser(username='testingier', email='testingier@test.gov', password=flarum_hash_password('test'), discussions=discussions)
+        user = FlarumUser(username='testingier', email='testingier@test.gov', password=bcrypt_hash('test'), discussions=discussions)
         user.badges = [
             FlarumBadge(name='Awesome badge', description='A test badge that is awesome.', icon='fas fa-award'),
         ]
@@ -64,6 +69,7 @@ def test_user_create_and_delete(delete: bool=True):
 
             print(discussion.id, discussion.title)
             print(f'First post: "{discussion.posts[0].content}"')
+            print(f"Tags: {[(tag.name, [child_tag.name for child_tag in tag.children]) for tag in discussion.tags]}")
 
 
         if delete:
