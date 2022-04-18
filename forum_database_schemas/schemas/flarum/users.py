@@ -9,6 +9,7 @@ if t.TYPE_CHECKING:
     from .achievements import FlarumAchievement
     from .api_keys import FlarumApiKey
     from .badges import FlarumBadge
+    from .banned_ips import FlarumBannedIp
     from .discussions import FlarumDiscussion
     from .posts import FlarumPost
 
@@ -154,6 +155,8 @@ class FlarumUser(sql.SQLModel, table=True):
     """List of discussions in which the user has posted the best answer."""
     discussions: t.List['FlarumDiscussion'] = sql.Relationship(sa_relationship_kwargs={"primaryjoin": "FlarumUser.id==FlarumDiscussion.user_id", "lazy": "joined"})
     """List of discussions the user has created."""
+    given_ip_bans: t.List['FlarumBannedIp'] = sql.Relationship(sa_relationship_kwargs={"primaryjoin": "FlarumUser.id==FlarumBannedIp.creator_id", "lazy": "joined"})
+    """List of IP bans the user has given."""
     hid_discussions: t.List['FlarumDiscussion'] = sql.Relationship(sa_relationship_kwargs={"primaryjoin": "FlarumUser.id==FlarumDiscussion.hidden_user_id", "lazy": "joined"})
     """List of discussions that the user hid."""
     last_posted_in_discussions: t.List['FlarumDiscussion'] = sql.Relationship(sa_relationship_kwargs={"primaryjoin": "FlarumUser.id==FlarumDiscussion.last_posted_user_id", "lazy": "joined"})

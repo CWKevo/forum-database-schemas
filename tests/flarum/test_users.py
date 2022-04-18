@@ -3,6 +3,7 @@ from sqlmodel import select, Session
 
 from forum_database_schemas.utilities import flarum_hash_password
 from forum_database_schemas.schemas.flarum.badges import FlarumBadge
+from forum_database_schemas.schemas.flarum.banned_ips import FlarumBannedIp
 from forum_database_schemas.schemas.flarum.discussions import FlarumDiscussion
 from forum_database_schemas.schemas.flarum.posts import FlarumPost
 from forum_database_schemas.schemas.flarum.users import FlarumUser
@@ -40,6 +41,9 @@ def test_user_create_and_delete(delete: bool=True):
         user.badges = [
             FlarumBadge(name='Awesome badge', description='A test badge that is awesome.', icon='fas fa-award'),
         ]
+        user.given_ip_bans = [
+            FlarumBannedIp(user=user, address='127.0.0.1'),
+        ]
 
         session.add(user)
         session.commit()
@@ -47,6 +51,7 @@ def test_user_create_and_delete(delete: bool=True):
 
         print(user.id, user.username)
         print(f"Badges: {[badge.name for badge in user.badges]}")
+        print(f"Given IP bans: {[(ban.user.username, ban.address) for ban in user.given_ip_bans]}")
 
         for discussion in user.discussions:
             user.posts = [
