@@ -13,7 +13,7 @@ class FlarumBannedIp(sql.SQLModel, table=True):
     """
         A Flarum model for banned IP.
     """
-	
+
     __tableargs__ = (
         Index('banned_ips_address_unique', 'address', unique=True),
         Index('banned_ips_user_id_foreign', 'user_id'),

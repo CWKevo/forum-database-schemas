@@ -13,7 +13,7 @@ class FlarumApiKey(sql.SQLModel, table=True):
     """
         A Flarum API key model.
     """
-	
+
     __tableargs__ = (
         Index('api_keys_key_unique', 'key', unique=True),
         Index('api_keys_user_id_foreign', 'user_id')

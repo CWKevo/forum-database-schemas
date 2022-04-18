@@ -16,7 +16,7 @@ class FlarumBadge(sql.SQLModel, table=True):
     """
         A Flarum model for badge.
     """
-	
+
     __tableargs__ = (
         Index('badges_badge_category_id_foreign', 'badge_category_id'),
     )
