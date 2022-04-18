@@ -6,6 +6,9 @@ from datetime import datetime
 
 if t.TYPE_CHECKING:
     from .badge_category import FlarumBadgeCategory
+    from .users import FlarumUser
+
+from .badge_user import FlarumBadgeUser
 
 
 
@@ -51,3 +54,6 @@ class FlarumBadge(sql.SQLModel, table=True):
     """The badge's icon color"""
     label_color: t.Optional[str] = sql.Field(max_length=50)
     """The badge's label color"""
+
+    users: t.List['FlarumUser'] = sql.Relationship(back_populates='badges', link_model=FlarumBadgeUser)
+    """The users that have the badge"""

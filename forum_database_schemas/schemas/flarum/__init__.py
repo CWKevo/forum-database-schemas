@@ -7,6 +7,7 @@ from .achievements import FlarumAchievement
 from .api_keys import FlarumApiKey
 from .badges import FlarumBadge
 from .badge_category import FlarumBadgeCategory
+from .badge_user import FlarumBadgeUser
 from .discussions import FlarumDiscussion
 from .posts import FlarumPost
 from .users import FlarumUser
@@ -19,6 +20,7 @@ ALL_FLARUM_MODELS: t.Type[SQLModel] = [
     FlarumApiKey,
     FlarumBadge,
     FlarumBadgeCategory,
+    FlarumBadgeUser,
     FlarumDiscussion,
     FlarumPost,
     FlarumUser,

@@ -8,10 +8,12 @@ if t.TYPE_CHECKING:
     from .access_tokens import FlarumAccessToken
     from .achievements import FlarumAchievement
     from .api_keys import FlarumApiKey
+    from .badges import FlarumBadge
     from .discussions import FlarumDiscussion
     from .posts import FlarumPost
 
 from .achievement_user import FlarumAchievementUser
+from .badge_user import FlarumBadgeUser
 
 
 class FlarumUser(sql.SQLModel, table=True):
@@ -146,6 +148,8 @@ class FlarumUser(sql.SQLModel, table=True):
     """List of achievements the user has."""
     api_keys: t.List['FlarumApiKey'] = sql.Relationship(back_populates='user')
     """List of API keys belonging to the user."""
+    badges: t.List['FlarumBadge'] = sql.Relationship(back_populates="users", link_model=FlarumBadgeUser)
+    """List of badges the user has."""
     best_answer_discussions: t.List['FlarumDiscussion'] = sql.Relationship(sa_relationship_kwargs={"primaryjoin": "FlarumUser.id==FlarumDiscussion.best_answer_user_id", "lazy": "joined"})
     """List of discussions in which the user has posted the best answer."""
     discussions: t.List['FlarumDiscussion'] = sql.Relationship(sa_relationship_kwargs={"primaryjoin": "FlarumUser.id==FlarumDiscussion.user_id", "lazy": "joined"})
