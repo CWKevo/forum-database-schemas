@@ -2,6 +2,7 @@ from tests.flarum import FLARUM_ENGINE
 from sqlmodel import select, Session
 
 from forum_database_schemas.utilities import flarum_hash_password
+from forum_database_schemas.schemas.flarum.badges import FlarumBadge
 from forum_database_schemas.schemas.flarum.discussions import FlarumDiscussion
 from forum_database_schemas.schemas.flarum.posts import FlarumPost
 from forum_database_schemas.schemas.flarum.users import FlarumUser
@@ -36,12 +37,16 @@ def test_user_create_and_delete(delete: bool=True):
         ]
 
         user = FlarumUser(username='testingier', email='testingier@test.gov', password=flarum_hash_password('test'), discussions=discussions)
+        user.badges = [
+            FlarumBadge(name='Awesome badge', description='A test badge that is awesome.', icon='fas fa-award'),
+        ]
 
         session.add(user)
         session.commit()
         session.refresh(user)
 
         print(user.id, user.username)
+        print(f"Badges: {[badge.name for badge in user.badges]}")
 
         for discussion in user.discussions:
             user.posts = [
