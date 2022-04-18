@@ -5,6 +5,7 @@ from sqlalchemy import Index
 from datetime import datetime
 
 if t.TYPE_CHECKING:
+    from .blog_meta import FlarumBlogMeta
     from .posts import FlarumPost
     from .users import FlarumUser
 
@@ -131,5 +132,7 @@ class FlarumDiscussion(sql.SQLModel, table=True):
     """Whether the discussion is visible to everyone."""
 
 
+    blog_metas: t.List['FlarumBlogMeta'] = sql.Relationship(back_populates='discussion')
+    """List of blog metas of this discussion."""
     posts: t.List['FlarumPost'] = sql.Relationship(sa_relationship_kwargs={"primaryjoin": "FlarumPost.discussion_id==FlarumDiscussion.id", "lazy": "joined"})
     """List of all posts in the discussion."""
