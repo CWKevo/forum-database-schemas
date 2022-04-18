@@ -1,6 +1,7 @@
 import typing as t
 import sqlmodel as sql
 
+from sqlalchemy import Index
 from datetime import datetime
 
 if t.TYPE_CHECKING:
@@ -13,6 +14,9 @@ class FlarumBadge(sql.SQLModel, table=True):
         A Flarum model for badge.
     """
 	
+    __tableargs__ = (
+        Index('badges_badge_category_id_foreign', 'badge_category_id'),
+    )
     __tablename__ = 'badges'
     id: t.Optional[int] = sql.Field(primary_key=True)
     """The ID of the badge"""
@@ -35,7 +39,7 @@ class FlarumBadge(sql.SQLModel, table=True):
 
     badge_category: t.Optional['FlarumBadgeCategory'] = sql.Relationship(back_populates='badges')
     """The badge category"""
-    badge_category_id: t.Optional[int] = sql.Field(foreign_key='badge_category.id', index=True)
+    badge_category_id: t.Optional[int] = sql.Field(foreign_key='badge_category.id')
     """The ID of the badge category"""
 
     points: int = 0

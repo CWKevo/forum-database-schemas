@@ -1,7 +1,7 @@
 import typing as t
 import sqlmodel as sql
 
-from sqlalchemy import Column, Integer, ForeignKey
+from sqlalchemy import Column, Integer, ForeignKey, Index
 from datetime import datetime
 
 if t.TYPE_CHECKING:
@@ -14,6 +14,11 @@ class FlarumAccessToken(sql.SQLModel, table=True):
         A Flarum access token model.
     """
 
+    __tableargs__ = (
+        Index('access_tokens_token_unique', 'token', unique=True),
+        Index('access_tokens_user_id_foreign', 'user_id'),
+        Index('access_tokens_type_index', 'type')
+    )
     __tablename__ = 'access_tokens'
     id: t.Optional[int] = sql.Field(default=None, primary_key=True)
     """ID of the access token."""
@@ -22,7 +27,7 @@ class FlarumAccessToken(sql.SQLModel, table=True):
     """Access token."""
     user: t.Optional['FlarumUser'] = sql.Relationship(back_populates='access_tokens')
     """User associated with the access token."""
-    user_id: int = sql.Field(index=True, sa_column=Column(Integer, ForeignKey('users.id', ondelete='CASCADE')))
+    user_id: int = sql.Field(sa_column=Column(Integer, ForeignKey('users.id', ondelete='CASCADE')))
     """ID of the user associated with the access token."""
 
     last_activity_at: datetime

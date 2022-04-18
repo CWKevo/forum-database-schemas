@@ -17,10 +17,14 @@ class FlarumPost(sql.SQLModel, table=True):
 
     __tablename__ = 'posts'
     __table_args__ = (
+        Index('posts_edited_user_id_foreign', "edited_user_id"),
+        Index('posts_hidden_user_id_foreign', "hidden_user_id"),
+        Index('posts_shadow_hidden_at_index', "shadow_hidden_at"),
         Index('posts_discussion_id_number_unique', "discussion_id", "number", unique=True),
         Index('posts_discussion_id_number_index', "discussion_id", "number"),
         Index('posts_discussion_id_created_at_index', "discussion_id", "created_at"),
         Index('posts_user_id_created_at_index', "user_id", "created_at"),
+        Index('content', "content", mysql_prefix="FULLTEXT"),
     )
     id: t.Optional[int] = sql.Field(primary_key=True)
     """The ID of the post."""
@@ -41,7 +45,7 @@ class FlarumPost(sql.SQLModel, table=True):
     """The ID of the post's author."""
     type: t.Optional[str] = sql.Field(default='comment', max_length=100)
     """The type of the post. `comment` for standard reply or `discussionLocked` for "discussion locked" messages, etc..."""
-    content: t.Optional[t.Text] = sql.Field(index=True)
+    content: t.Optional[t.Text]
     """The HTML/XML content of the post."""
 
 
@@ -49,14 +53,14 @@ class FlarumPost(sql.SQLModel, table=True):
     """When was the post edited at (if it was)?"""
     edited_user: t.Optional['FlarumUser'] = sql.Relationship(sa_relationship_kwargs={"primaryjoin": "FlarumPost.edited_user_id==FlarumUser.id", "lazy": "joined"})
     """Who edited the post?"""
-    edited_user_id: t.Optional[int] = sql.Field(foreign_key='users.id', index=True)
+    edited_user_id: t.Optional[int] = sql.Field(foreign_key='users.id')
     """The ID of the user who edited the post."""
 
     hidden_at: t.Optional[datetime]
     """When was the post hidden at (if it was)?"""
     hidden_user: t.Optional['FlarumUser'] = sql.Relationship(sa_relationship_kwargs={"primaryjoin": "FlarumPost.hidden_user_id==FlarumUser.id", "lazy": "joined"})
     """Who hid the post?"""
-    hidden_user_id: t.Optional[int] = sql.Field(foreign_key='users.id', index=True)
+    hidden_user_id: t.Optional[int] = sql.Field(foreign_key='users.id')
     """The ID of the user who hid the post."""
 
 
@@ -74,5 +78,5 @@ class FlarumPost(sql.SQLModel, table=True):
 
     posted_on: t.Optional[str] = sql.Field(max_length=255)
     """The date/time the post was posted on."""
-    shadow_hidden_at: t.Optional[datetime] = sql.Field(index=True)
+    shadow_hidden_at: t.Optional[datetime]
     """When was the post shadow hidden at (if it was)?"""

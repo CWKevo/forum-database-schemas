@@ -12,7 +12,7 @@ class FlarumBadgeCategory(sql.SQLModel, table=True):
     """
         A Flarum model for badge.
     """
-	
+
     __tablename__ = 'badge_category'
     id: t.Optional[int] = sql.Field(primary_key=True)
     """The ID of the badge category"""

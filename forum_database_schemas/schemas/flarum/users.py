@@ -1,6 +1,7 @@
 import typing as t
 import sqlmodel as sql
 
+from sqlalchemy import Index
 from datetime import datetime, date
 
 if t.TYPE_CHECKING:
@@ -18,8 +19,21 @@ class FlarumUser(sql.SQLModel, table=True):
         A Flarum user model.
     """
 
+    __tableargs__ = (
+        Index('users_username_unique', "username", unique=True),
+        Index('users_email_unique', "email", unique=True),
+        Index('users_joined_at_index', "joined_at"),
+        Index('users_last_seen_at_index', "last_seen_at"),
+        Index('users_discussion_count_index', "discussion_count"),
+        Index('users_comment_count_index', "comment_count"),
+        Index('users_nickname_index', "nickname"),
+        Index('users_blocks_byobu_pd_index', "blocks_byobu_pd"),
+        Index('users_staffbadge_index', "staffBadge"),
+        Index('users_taglist_index', "tagList"),
+        Index('users_shadow_banned_until_index', "shadow_banned_until"),
+    )
     __tablename__ = 'users'
-    id: t.Optional[int] = sql.Field(default=None, primary_key=True, index=True)
+    id: t.Optional[int] = sql.Field(default=None, primary_key=True)
     """ID of the user."""
 
     username: str = sql.Field(max_length=100, sa_column_kwargs={'unique': True})
@@ -43,9 +57,9 @@ class FlarumUser(sql.SQLModel, table=True):
     preferences: str = '{}'
     """User's preferences data (for notifications, and other settings such as draft autosave interval)."""
 
-    joined_at: t.Optional[datetime] = sql.Field(index=True)
+    joined_at: t.Optional[datetime]
     """Date and time when the user joined the forum."""
-    last_seen_at: t.Optional[datetime] = sql.Field(index=True)
+    last_seen_at: t.Optional[datetime]
     """Date and time when the user was last seen on the forum."""
     marked_all_as_read_at: t.Optional[datetime]
     """Date and time when the user marked all discussions as read."""
@@ -64,9 +78,9 @@ class FlarumUser(sql.SQLModel, table=True):
     suspend_message: t.Optional[t.Text]
     """Message for user's suspension."""
 
-    discussion_count: int = sql.Field(default=0, index=True)
+    discussion_count: int = sql.Field(default=0)
     """Number of discussions the user has created."""
-    comment_count: int = sql.Field(default=0, index=True)
+    comment_count: int = sql.Field(default=0)
     """Number of posts the user has created."""
 
     first_post_approval_count: int = 0
@@ -81,8 +95,8 @@ class FlarumUser(sql.SQLModel, table=True):
     showDobYear: bool = True
     """Whether the user's birthday's year should be shown."""
 
-    tagList: t.Optional[str] = sql.Field(max_length=150, index=True)
-    staffBadge: t.Optional[str] = sql.Field(max_length=150, index=True)
+    tagList: t.Optional[str] = sql.Field(max_length=150)
+    staffBadge: t.Optional[str] = sql.Field(max_length=150)
 
     blocks_byobu_pd: bool = False
     """Whether the user has blocked private discussions."""

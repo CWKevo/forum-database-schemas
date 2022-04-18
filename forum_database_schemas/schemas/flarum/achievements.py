@@ -1,6 +1,8 @@
 import typing as t
 import sqlmodel as sql
 
+from sqlalchemy import Index
+
 if t.TYPE_CHECKING:
     from .users import FlarumUser
 
@@ -15,6 +17,10 @@ class FlarumAchievement(sql.SQLModel, table=True):
         https://discuss.flarum.org/d/26675
     """
 
+    __tableargs__ = (
+        Index('achievement_user_user_id_achievement_id_index', 'user_id', 'achievement_id'),
+        Index('achievement_user_achievement_id_foreign', 'achievement_id')
+    )
     __tablename__ = 'achievements'
     id: t.Optional[int] = sql.Field(default=None, primary_key=True)
     """The ID of the achievement (primary key)."""

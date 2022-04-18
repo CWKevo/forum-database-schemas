@@ -1,7 +1,7 @@
 import typing as t
 import sqlmodel as sql
 
-from sqlalchemy import Column, Integer, ForeignKey
+from sqlalchemy import Column, Integer, ForeignKey, Index
 from datetime import datetime
 
 if t.TYPE_CHECKING:
@@ -14,6 +14,10 @@ class FlarumApiKey(sql.SQLModel, table=True):
         A Flarum API key model.
     """
 	
+    __tableargs__ = (
+        Index('api_keys_key_unique', 'key', unique=True),
+        Index('api_keys_user_id_foreign', 'user_id')
+    )
     __tablename__ = 'api_keys'
     id: t.Optional[int] = sql.Field(primary_key=True)
     """The ID of the API key"""
@@ -27,7 +31,7 @@ class FlarumApiKey(sql.SQLModel, table=True):
 
     user: 'FlarumUser' = sql.Relationship(back_populates='api_keys')
     """Do actions on behalf of this user."""
-    user_id: t.Optional[int] = sql.Field(index=True, sa_column=Column(Integer, ForeignKey('users.id', ondelete='CASCADE')))
+    user_id: t.Optional[int] = sql.Field(sa_column=Column(Integer, ForeignKey('users.id', ondelete='CASCADE')))
     """Do actions on behalf of this user (ID)."""
 
     created_at: datetime = datetime.now()
