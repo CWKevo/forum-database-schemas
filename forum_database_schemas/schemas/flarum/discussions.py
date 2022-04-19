@@ -102,7 +102,9 @@ class FlarumDiscussion(sql.SQLModel, table=True):
     is_sticky: bool = False
     """Whether the discussion is sticky."""
 
-    best_answer_post_id: t.Optional[int]
+    best_answer_post: t.Optional['FlarumPost'] = sql.Relationship(sa_relationship_kwargs={"primaryjoin": "FlarumDiscussion.best_answer_post_id==FlarumPost.id", "lazy": "joined"})
+    """Post that was marked as best answer in the discussion."""
+    best_answer_post_id: t.Optional[int] = sql.Field(foreign_key='posts.id')
     """ID of the post that is the best answer."""
     best_answer_user: t.Optional['FlarumUser'] = sql.Relationship(back_populates='best_answer_discussions', sa_relationship_kwargs={"primaryjoin": "FlarumDiscussion.best_answer_user_id==FlarumUser.id", "lazy": "joined"})
     """User who posted the best answer in the discussion."""

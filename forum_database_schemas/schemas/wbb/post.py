@@ -1,7 +1,11 @@
 import typing as t
 import sqlmodel as sql
 
-from sqlalchemy import Index
+from sqlalchemy import Column, Integer, ForeignKey, Index
+
+if t.TYPE_CHECKING:
+    from .thread import WBBThread
+    from .user import WCFUser
 
 
 
@@ -23,20 +27,25 @@ class WBBPost(sql.SQLModel, table=True):
         Index("isOfficial", 'threadID', 'isOfficial'),
     )
     __tablename__ = 'wbb1_post'
-
     postID: t.Optional[int] = sql.Field(primary_key=True)
     """The ID of the post."""
-    threadID: int
+
+    thread: 'WBBThread' = sql.Relationship(back_populates='posts', sa_relationship_kwargs={"primaryjoin": "WBBPost.threadID == WBBThread.threadID", "lazy": "joined"})
+    """The thread the post belongs to."""
+    threadID: int = sql.Field(sa_column=Column(Integer, ForeignKey('wbb1_thread.threadID', ondelete='CASCADE')))
     """ID of the thread this post was posted in."""
-    userID: t.Optional[int]
+    user: t.Optional['WCFUser'] = sql.Relationship(back_populates='posts')
+    """The user who posted this post."""
+    userID: t.Optional[int] = sql.Field(foreign_key='wcf1_user.userID')
     """ID of the post author."""
-    username: str = sql.Field(max_length=255)
+    username: str = sql.Field(max_length=255, default='')
     """Username of the post author."""
-    subject: str = sql.Field(max_length=255)
+    subject: str = sql.Field(max_length=255, default='')
     """Subject/title of the post."""
     message: t.Text
     """Message of the post."""
     time: int = 0
+    """Time when was the post created."""
 
     isDeleted: bool = False
     """Whether the post is deleted."""
@@ -49,7 +58,7 @@ class WBBPost(sql.SQLModel, table=True):
 
     editorID: t.Optional[int]
     """ID of the editor."""
-    editor: str = sql.Field(max_length=255)
+    editor: str = sql.Field(max_length=255, default='')
     """Username of the editor."""
     lastEditTime: int = 0
     """Time of the last edit."""
@@ -66,7 +75,7 @@ class WBBPost(sql.SQLModel, table=True):
     """ID of the poll."""
     enableHtml: bool = False
     """Whether the post uses HTML."""
-    ipAddress: str = sql.Field(max_length=39)
+    ipAddress: str = sql.Field(max_length=39, default='')
     """IP address of the user that made this post."""
     cumulativeLikes: int = 0
     """Number of likes."""

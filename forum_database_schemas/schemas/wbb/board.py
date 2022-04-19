@@ -12,9 +12,9 @@ class WBBBoard(sql.SQLModel, table=True):
     """
 
     __tablename__ = 'wbb1_board'
-
     boardID: t.Optional[int] = sql.Field(primary_key=True)
     """The ID of the board."""
+
     parent: t.Optional['WBBBoard'] = sql.Relationship(back_populates='children', sa_relationship_kwargs={'remote_side': "WBBBoard.boardID"})
     """Parent board."""
     parentID: t.Optional[int] = sql.Field(foreign_key='wbb1_board.boardID')
@@ -32,9 +32,8 @@ class WBBBoard(sql.SQLModel, table=True):
     """Whether the board description uses HTML."""
     externalURL: str = sql.Field(max_length=255, default='')
     """External URL of the board."""
-
     time: int = 0
-    """?"""
+    """Time when was the board created"""
     metaDescription: str = sql.Field(max_length=255, default='')
     """Meta description of the board."""
     countUserPosts: bool = True
@@ -82,7 +81,6 @@ class WBBBoard(sql.SQLModel, table=True):
     """Posts in board's threads."""
     threads: int = 0
     """Threads in the board."""
-
     iconData: t.Optional[t.Text]
     """Icon data."""
 

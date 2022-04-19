@@ -1,13 +1,16 @@
 from tests.flarum import FLARUM_ENGINE
 from sqlmodel import select, Session
 
+
 from forum_database_schemas.utilities import bcrypt_hash
+
 from forum_database_schemas.schemas.flarum.badges import FlarumBadge
 from forum_database_schemas.schemas.flarum.banned_ips import FlarumBannedIp
 from forum_database_schemas.schemas.flarum.discussions import FlarumDiscussion
 from forum_database_schemas.schemas.flarum.posts import FlarumPost
 from forum_database_schemas.schemas.flarum.tags import FlarumTag
 from forum_database_schemas.schemas.flarum.users import FlarumUser
+
 
 
 def test_user_select():
