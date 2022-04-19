@@ -4,9 +4,6 @@ from pathlib import Path
 
 from sqlmodel import create_engine, SQLModel
 from sqlalchemy.future.engine import Engine
-from sqlalchemy import inspect
-
-from forum_database_schemas.utilities import add_column
 
 
 # Overwrite __doc__ with README, so that pdoc can render it:
@@ -32,8 +29,7 @@ def create_db_engine(database_models: t.List[t.Type[SQLModel]], *args, **kwargs)
 
     engine = create_engine(*args, **kwargs)
 
-    for model in database_models:
-        for column in inspect(model).columns:
-            add_column(engine, model.__tablename__, column)
+    tables = [SQLModel.metadata.tables[model.__tablename__] for model in database_models]
+    SQLModel.metadata.create_all(engine, tables=tables, checkfirst=True)
 
     return engine

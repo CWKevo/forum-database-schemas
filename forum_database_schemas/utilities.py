@@ -1,4 +1,4 @@
-from sqlmodel import Session, Column, SQLModel
+from sqlmodel import Session, Column
 
 import bcrypt
 
@@ -9,8 +9,6 @@ from sqlalchemy.sql import text
 
 
 def add_column(engine: Engine, table_name: str, column: Column):
-    SQLModel.metadata.create_all(engine)
-
     with Session(engine) as session:
         with session.begin():
             try:
